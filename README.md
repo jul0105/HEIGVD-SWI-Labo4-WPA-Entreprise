@@ -49,31 +49,84 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 
 - Comparer [la capture](files/auth.pcap) au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
 	- Requête et réponse d’authentification système ouvert
- 	- Requête et réponse d’association (ou reassociation)
+	
+	![](images/img1.png)
+	
+	- Requête et réponse d’association (ou reassociation)
+	
+	![](images/img2.png)
+	
 	- Négociation de la méthode d’authentification entreprise
+	
+	![](images/img3.png)
+	
 	- Phase d’initiation. Arrivez-vous à voir l’identité du client ?
+	
+	![](images/img4.png)
+	
+	Oui, on peut voir l'identité du client dans la réponse :
+	
+	![](images/img5.png)
+	
 	- Phase hello :
+	- ![](images/img6.png)
+
 		- Version TLS
+		- ![](images/img7.png)
+		
 		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
+		- ![](images/img8.png)
+		
 		- Nonces
+		- ![](images/img9.png)
+		
 		- Session ID
+		- ![](images/img10.png)
+	
+	
+	
 	- Phase de transmission de certificats
-	 	- Echanges des certificats
+	
+	Le packet "Server Hello, Certificate" est la recomposition des 4 fragments précédents :
+	
+	![](images/img11.png)
+	
+	Voici les certificats qui sont envoyé par le serveur :
+	
+	![](images/img16.png)
+	
+	 	- Échanges des certificats
 		- Change cipher spec
+	
+	![](images/img12.png)
+	
+	Message "Change Cipher Spec" indiquant que la communication sera chiffré à partir de ce point :
+	
+	![](images/img15.png)
+	
 	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data »)
+	
+	Échange de clé illisible car chiffré :
+	
+	![](images/img13.png)
+	
 	- 4-way handshake
+	
+	![](images/img14.png)
 
 ### Répondez aux questions suivantes :
- 
-> **_Question :_** Quelle ou quelles méthode(s) d’authentification est/sont proposé(s) au client ?
-> 
-> **_Réponse :_** 
+
+> **_Question :_** Quelle(s) méthode(s) d’authentification est/sont proposé(s) au client ?
+>
+> **_Réponse :_** EAP-TLS et PEAP. 
+>
+> L'AP propose initialement EAP-TLS au client mais le client indique qu'il désire utiliser PEAP.
 
 ---
 
 > **_Question:_** Quelle méthode d’authentification est finalement utilisée ?
 > 
-> **_Réponse:_** 
+> **_Réponse:_** PEAP
 
 ---
 
@@ -81,12 +134,11 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 > 
 > - a. Le serveur envoie-t-il un certificat au client ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_**
+> **_Réponse:_** Oui, le serveur d'authentification envoi un certificat TLS au client pour s'authentifier auprès du client
 > 
 > - b. Le client envoie-t-il un certificat au serveur ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_**
-> 
+> **_Réponse:_** Non, avec PEAP, le client n'a pas de certificat. Il est authentifier auprès du serveur d'authentification à l'aide d'un challenge-response.
 
 ---
 
