@@ -48,71 +48,126 @@ rfkill unblock wlan
 Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](files/auth.pcap) avec Wireshark et fournir des captures d’écran indiquant dans chaque capture les données demandées.
 
 - Comparer [la capture](files/auth.pcap) au processus d’authentification donné en théorie (n’oubliez pas les captures d'écran pour illustrer vos comparaisons !). En particulier, identifier les étapes suivantes :
-	- Requête et réponse d’authentification système ouvert
-	
-	![](images/img1.png)
-	
-	- Requête et réponse d’association (ou reassociation)
-	
-	![](images/img2.png)
-	
-	- Négociation de la méthode d’authentification entreprise
-	
-	![](images/img3.png)
-	
-	- Phase d’initiation. Arrivez-vous à voir l’identité du client ?
-	
-	![](images/img4.png)
-	
-	Oui, on peut voir l'identité du client dans la réponse :
-	
-	![](images/img5.png)
-	
-	- Phase hello :
-	- ![](images/img6.png)
+  - Requête et réponse d’authentification système ouvert
 
-		- Version TLS
-		- ![](images/img7.png)
-		
-		- Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP
-		- ![](images/img8.png)
-		
-		- Nonces
-		- ![](images/img9.png)
-		
-		- Session ID
-		- ![](images/img10.png)
-	
-	
-	
-	- Phase de transmission de certificats
-	
-	Le packet "Server Hello, Certificate" est la recomposition des 4 fragments précédents :
-	
-	![](images/img11.png)
-	
-	Voici les certificats qui sont envoyé par le serveur :
-	
-	![](images/img16.png)
-	
-	 	- Échanges des certificats
-		- Change cipher spec
-	
-	![](images/img12.png)
-	
-	Message "Change Cipher Spec" indiquant que la communication sera chiffré à partir de ce point :
-	
-	![](images/img15.png)
-	
-	- Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data »)
-	
-	Échange de clé illisible car chiffré :
-	
-	![](images/img13.png)
-	
-	- 4-way handshake
-	
-	![](images/img14.png)
+  ![](images/img1.png)
+
+  > Dans cette capture, on peut voir le suppléant `HuaweiTe_70:df:32` effectué une requête d'authentification auprès de l'authentificateur, `Cisco_60:bf:50`. Puis, on a une réponse d'authentification de l'authentificateur vers le suppléant. On a un système d'authentification ouvert. 
+
+  
+
+  - Requête et réponse d’association (ou reassociation)
+
+  ![](images/img2.png)
+
+  
+
+  - Négociation de la méthode d’authentification entreprise
+
+  ![](images/img3.png)
+
+  > La première ligne correspond à l'annonce de l'authentificateur qui indique qu'il utilise EAP-TLS comme méthode. La seconde est la réponse du suppliant qui refuse la méthode et demande PEAP à la place. La dernière est l'acceptation de l'authentificateur pour cette méthode (PEAP). 
+
+  
+
+  - Phase d’initiation. Arrivez-vous à voir l’identité du client ?
+
+  ![](images/img4.png)
+
+  >  Oui, on peut voir l'identité du client dans la réponse. Celle-ci est `einet\joel.gonin`. 
+
+  ![](images/img5.png)
+
+  
+
+  - Phase hello :
+
+  > Phase hello Client : 
+  >
+  > ![](images/img22.png)
+
+  > Phase hello Serveur :
+  >
+  > ![](images/img21.png)
+
+  
+
+  - Version TLS
+
+  > La version proposée par le client : TLS 1.2. Cependant, le serveur demande la version de TLS 1.0. 
+
+  
+
+  - Suites cryptographiques et méthodes de compression proposées par le client et acceptées par l’AP.
+
+  > Liste des suites cryptographiques proposées par le client :![](img/README/img8.png)
+
+  > Méthodes de compression, on peut voir que le client n'en propose aucune.<img src="img/README/img17.png" style="zoom: 50%;" />
+
+  > Le serveur a choisi la suite `TLS_RSA_WITH_AES_256_CBC_SHA` .  
+  >
+  > ![](img/README/img18.png)
+
+  
+
+  - Nonces
+
+  > Random du Client : `955bf5b716e24a729c4b60609b8ce482014ac38f1e9cb8cf2bf8fd30bf8995f1`
+  >
+  > ![](img/README/img9.png)
+  >
+  > Random du Serveur : ` 003b6c2676ffd79814e56c065e5b0c39cb26600148ca1e9b3e8af83426d46e11`
+  >
+  > ![](img/README/img19.png)
+
+  
+
+  - Session ID
+
+  >Session ID client :
+  >
+  >![](img/README/img10.png)
+  >
+  >Session ID serveur :
+  >
+  >![](img/README/img20.png)
+
+  
+
+  - Phase de transmission de certificats
+
+    - Echanges des certificats. 
+
+    >  Le packet "Server Hello, Certificate" est la recomposition des 4 fragments précédents. Comme on utilise la méthode PEAP, seul le serveur envoie son certificat (le client pas). 
+    >
+    > ![](images/img11.png)
+    >
+    > Voici les certificats qui sont envoyé par le serveur :
+    >
+    > ![](images/img16.png)
+
+     	- Échanges des certificats
+     	- Change cipher spec
+
+    ![](images/img12.png)
+
+    - Change cipher spec. Message "Change Cipher Spec" indiquant que la communication sera chiffré à partir de ce point :
+
+      ![](img/README/img15.png)
+
+      
+
+  - Authentification interne et transmission de la clé WPA (échange chiffré, vu comme « Application data »)
+
+  >  Échange de clé illisible car chiffré :
+  >
+  > ![](images/img13.png)
+
+  
+
+  - 4-way handshake
+
+  > ![](images/img14.png)
 
 ### Répondez aux questions suivantes :
 
@@ -134,11 +189,11 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 > 
 > - a. Le serveur envoie-t-il un certificat au client ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_** Oui, le serveur d'authentification envoi un certificat TLS au client pour s'authentifier auprès du client
+> **_Réponse:_** Oui, le serveur d'authentification envoi un certificat au client pour s'authentifier auprès du client. Le client peut vérifier si le serveur est légitime auprès d'une autorité de certification. 
 > 
 > - b. Le client envoie-t-il un certificat au serveur ? Pourquoi oui ou non ?
 > 
-> **_Réponse:_** Non, avec PEAP, le client n'a pas de certificat. Il est authentifier auprès du serveur d'authentification à l'aide d'un challenge-response.
+> **_Réponse:_** Non, avec la méthode PEAP, le client n'envoie pas de certificat. Il est authentifié auprès du serveur lors de la phase d'authentification interne.
 
 ---
 
