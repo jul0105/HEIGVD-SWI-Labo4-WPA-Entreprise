@@ -40,8 +40,9 @@ rfkill unblock wlan
 -	Pour pouvoir capturer une authentification complète, il faut se déconnecter d’un réseau et attendre 1 minute (timeout pour que l’AP « oublie » le client) 
 -	Les échanges d’authentification entreprise peuvent être facilement trouvés utilisant le filtre d’affichage « ```eap``` » dans Wireshark
 
-
 ## Travail à réaliser
+
+> Auteurs : Gwendoline Dössegger & Julien Béguin
 
 ### 1. Analyse d’une authentification WPA Entreprise
 
@@ -52,7 +53,7 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 
   ![](images/img1.png)
 
-  > Dans cette capture, on peut voir le suppléant `HuaweiTe_70:df:32` effectué une requête d'authentification auprès de l'authentificateur, `Cisco_60:bf:50`. Puis, on a une réponse d'authentification de l'authentificateur vers le suppléant. On a un système d'authentification ouvert. 
+  > Dans cette capture, on peut voir le suppléant `HuaweiTe_70:df:32` effectué une requête d'authentification auprès de l'authentificateur, `Cisco_60:bf:50`. Puis, on a une réponse d'authentification de l'authentificateur vers le suppléant. 
 
   
 
@@ -94,7 +95,7 @@ Dans cette première partie, vous allez analyser [une connexion WPA Entreprise](
 
   - Version TLS
 
-  > La version proposée par le client : TLS 1.2. Cependant, le serveur demande la version de TLS 1.0. 
+  > La version proposée par le client : TLS 1.2. Cependant, le serveur annonce la version de TLS 1.0. 
 
   
 
